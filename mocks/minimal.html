@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My World Blueprint — A quieter workshop</title>
+<style>
+:root{color-scheme:dark;--bg:#292a2b;--ink:#f2f0eb;--muted:#b2b0aa;--line:#484847;--orange:#efa05b}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.6 Arial,Helvetica,sans-serif}button,textarea{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible{outline:2px solid var(--orange);outline-offset:5px}button{color:inherit}a{color:inherit}.app{display:grid;grid-template-columns:216px minmax(0,1fr);min-height:100svh}.sidebar{background:#222323;border-right:1px solid #383938;padding:38px 27px;display:flex;flex-direction:column}.brand{font-size:12px;font-weight:800;line-height:1.5;letter-spacing:1.2px;display:flex;gap:11px;align-items:center}.brand-mark{width:23px;height:29px;border:1px solid #c1b7a7;display:block;position:relative;flex-shrink:0}.brand-mark::after{content:'';position:absolute;inset:5px;border-top:1px solid var(--orange);border-left:1px solid var(--orange)}nav{margin-top:68px;display:flex;flex-direction:column;gap:8px}.tool{border:0;background:transparent;text-align:left;padding:10px 0 10px 16px;color:#a9aaa6;font-size:12px;position:relative}.tool[aria-pressed=true]{color:var(--ink)}.tool[aria-pressed=true]::before{content:'';position:absolute;left:0;top:18px;width:4px;height:4px;background:var(--orange);border-radius:50%}.tool:hover{color:var(--ink)}.sidebar-foot{margin-top:auto;padding-top:50px;font-size:10px;color:#979891;line-height:1.8}.sidebar-foot a{text-decoration:none}.sidebar-foot a:hover{color:var(--ink)}main{min-width:0;position:relative;isolation:isolate;display:flex;flex-direction:column;background:radial-gradient(ellipse at 42% 35%,#37373670,transparent 70%)}main::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:-1;opacity:.13;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.86' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23ffffff' filter='url(%23grain)' opacity='.8' d='M0 0h180v180H0z'/%3E%3C/svg%3E");background-size:180px 180px}.topbar{padding:33px 45px;display:flex;justify-content:space-between;align-items:center;gap:15px;color:#a6a6a0;font:10px ui-monospace,monospace;letter-spacing:.7px}.topbar .study{color:#a6a6a0}.mobile-menu{display:none;border:0;background:transparent;font-size:12px;padding:0}.workbench{width:min(100%,880px);padding:0 48px;margin:auto;transform:translateY(-18px)}.eyebrow{color:var(--orange);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin:0 0 25px}h1{font-size:clamp(36px,4.5vw,61px);line-height:1.08;letter-spacing:-2px;margin:0 0 20px;font-weight:750;max-width:720px}.intro{color:var(--muted);font-size:14px;margin:0 0 35px}.input-wrap{border:1px solid #777973;background:#20222255;border-radius:3px;box-shadow:inset 0 2px 8px #00000012}.input-wrap:focus-within{border-color:#c7b9a4;box-shadow:0 0 0 1px #c7b9a4}textarea{display:block;width:100%;min-height:175px;resize:vertical;border:0;background:transparent;color:var(--ink);padding:23px;font-size:18px;line-height:1.65;border-radius:3px}textarea:focus{outline:none}textarea::placeholder{color:#aaa9a2;opacity:1}.actions{display:flex;justify-content:space-between;gap:22px;align-items:center;margin-top:22px}.microcopy{color:#a8a8a1;font-size:11px;margin:0;max-width:280px}.primary{flex-shrink:0;border:1px solid #f4b47a;background:var(--orange);color:#292622;font-weight:700;font-size:12px;border-radius:3px;padding:13px 21px;box-shadow:0 2px 3px #0002}.primary:hover{background:#f6b174}.primary span{margin-left:24px}.status{color:#d7c9b9;font-size:12px;min-height:22px;margin-top:20px}.result{border-top:1px solid var(--line);padding-top:25px;margin-top:12px}.result-label{color:var(--orange);font-size:9px;font-weight:700;letter-spacing:1.5px}.result h2{font-size:23px;letter-spacing:-.5px;margin:10px 0}.result p{color:var(--muted);font-size:13px;margin:8px 0}.result .provenance{font-size:10px;color:#a3a49c;margin-top:18px}.footer{padding:28px 45px;display:flex;justify-content:space-between;gap:20px;color:#a3a49e;font:9px/1.8 ui-monospace,monospace;letter-spacing:.4px}.skip{position:absolute;left:15px;top:-100px;background:var(--orange);color:#222;padding:10px;z-index:10}.skip:focus{top:15px}[hidden]{display:none!important}@media(min-width:1500px){.workbench{width:960px;padding:0 40px}.app{grid-template-columns:240px minmax(0,1fr)}.sidebar{padding:40px 32px}textarea{min-height:200px}}@media(max-height:760px){.workbench{margin:45px auto;transform:none}}@media(max-width:700px){.app{display:block}.sidebar{display:none;border-right:0;border-bottom:1px solid var(--line);padding:23px}.sidebar.open{display:flex}nav{margin-top:23px}.sidebar-foot{display:none}.topbar{padding:24px}.mobile-menu{display:block}.topbar .location{display:none}.workbench{padding:0 24px;margin:60px auto 40px;transform:none}h1{font-size:42px;letter-spacing:-1.7px}.intro{font-size:13px;max-width:290px;margin-bottom:28px}.eyebrow{margin-bottom:22px}textarea{min-height:190px;font-size:17px;padding:19px}.actions{align-items:start;flex-direction:column;gap:19px}.microcopy{font-size:10px;max-width:none}.primary{width:100%;display:flex;justify-content:space-between}.footer{padding:25px 24px;font-size:8px}.footer span:last-child{display:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#workbench">Skip to workspace</a>
+<div class="app">
+<aside class="sidebar" id="sidebar" aria-label="Studio navigation">
+<div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>MY WORLD<br>BLUEPRINT</span></div>
+<nav aria-label="Creative tools"><button class="tool" data-tool="world" aria-pressed="true">World Builder</button><button class="tool" data-tool="character" aria-pressed="false">Character Builder</button></nav>
+<div class="sidebar-foot">A little space for possibility.<br><a href="workshop.html">Workshop study 03 ↗</a></div>
+</aside>
+<main>
+<header class="topbar"><button class="mobile-menu" id="menu" aria-expanded="false" aria-controls="sidebar">☰ &nbsp; Tools</button><span class="location" id="location">THE WORKSHOP / WORLD BUILDER</span><span class="study">DESIGN MOCK · 03</span></header>
+<section class="workbench" id="workbench" aria-labelledby="title">
+<p class="eyebrow">Start with a spark.</p>
+<h1 id="title">What do you want to create?</h1>
+<p class="intro" id="intro">A world begins with an idea. It doesn’t have to be complete.</p>
+<form id="form">
+<div class="input-wrap"><textarea id="intention" aria-label="Your world idea" placeholder="A place. A feeling. A possibility…" required></textarea></div>
+<div class="actions"><p class="microcopy">Local mock. No AI connected.<br>Your idea stays here; the preview is a fixed sample.</p><button type="submit" class="primary">Preview a blueprint <span aria-hidden="true">↗</span></button></div>
+</form>
+<div class="status" id="status" role="status" aria-live="polite"></div>
+<section class="result" id="result" aria-labelledby="result-title" hidden><span class="result-label">PREPARED SAMPLE</span><h2 id="result-title">Hello World</h2><p id="result-slogan">A greeting awakens a world.</p><p id="result-description">A speaker, a greeting, a listener. Meaning emerges through an encounter.</p><p class="provenance" id="provenance">From the Master Blueprint’s Hello World example. Not generated from your input.</p></section>
+</section>
+<footer class="footer"><span>NOTHING FINISHED. EVERYTHING POSSIBLE.</span><span>MY WORLD BLUEPRINT</span></footer>
+</main>
+</div>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+let active='world';
+const drafts={world:'',character:''};
+$('menu').onclick=()=>{const open=$('sidebar').classList.toggle('open');$('menu').setAttribute('aria-expanded',String(open));};
+document.querySelectorAll('[data-tool]').forEach(button=>button.onclick=()=>{
+ drafts[active]=$('intention').value;active=button.dataset.tool;const world=active==='world';
+ document.querySelectorAll('[data-tool]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+ $('location').textContent=world?'THE WORKSHOP / WORLD BUILDER':'THE WORKSHOP / CHARACTER BUILDER';
+ $('title').textContent=world?'What do you want to create?':'Who do you want to discover?';
+ $('intro').textContent=world?'A world begins with an idea. It doesn’t have to be complete.':'Begin with a voice, a desire, or someone you can almost see.';
+ $('intention').setAttribute('aria-label',world?'Your world idea':'Your character idea');
+ $('intention').placeholder=world?'A place. A feeling. A possibility…':'A voice. A longing. A contradiction…';
+ $('intention').value=drafts[active];$('result').hidden=true;$('status').textContent='';
+ if(matchMedia('(max-width:700px)').matches){$('sidebar').classList.remove('open');$('menu').setAttribute('aria-expanded','false');$('menu').focus();}
+});
+$('form').onsubmit=event=>{
+ event.preventDefault();if(!$('intention').value.trim()){$('status').textContent='Start with a few words.';$('intention').focus();return;}
+ const world=active==='world';$('result-title').textContent=world?'Hello World':'The Story Keeper';
+ $('result-slogan').textContent=world?'A greeting awakens a world.':'No story should disappear unheard.';
+ $('result-description').textContent=world?'A speaker, a greeting, a listener. Meaning emerges through an encounter.':'An archivist who gathers forgotten stories, hoping to find their own among them.';
+ $('provenance').textContent=world?'From the Master Blueprint’s Hello World example. Not generated from your input.':'Invented character fixture, not canonical. Not generated from your input.';
+ $('result').hidden=false;$('status').textContent='Sample opened. Nothing generated, saved, or committed.';
+};
+</script>
+</body>
+</html>

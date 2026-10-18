@@ -1,0 +1,629 @@
+<!doctype html>
+<html lang="en" data-theme="light" data-accent="green">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#f5f7f3">
+  <title>Living World Studio — Garden Portal</title>
+  <meta name="description" content="A standalone design prototype for the Living World Studio creative portal.">
+  <script>
+    // Load preferences before the first paint. Everything stays in this HTML file.
+    try {
+      const theme = localStorage.getItem('lws-theme');
+      const accent = localStorage.getItem('lws-accent');
+      if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+      if (accent === 'green' || accent === 'orange') document.documentElement.dataset.accent = accent;
+    } catch (_) { /* File previews may restrict storage. */ }
+  </script>
+  <style>
+    /* ========== 01 / DESIGN TOKENS ========== */
+    :root {
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      color-scheme: light;
+      --page: #f7f9f5;
+      --top: rgba(251, 253, 249, .94);
+      --rail: #f0f4ee;
+      --surface: #fffefa;
+      --surface-soft: #f6f9f4;
+      --ink: #20372e;
+      --ink-strong: #172d24;
+      --muted: #6b7e72;
+      --subtle: #88978d;
+      --line: #dce6dc;
+      --line-strong: #c8d8ca;
+      --grid-dot: rgba(53, 91, 69, .085);
+      --shadow: 0 21px 65px rgba(34, 69, 42, .055);
+      --ghost-hover: #e6eee5;
+      --chip: #fffefa;
+      --accent: #2a8464;
+      --accent-hover: #216e53;
+      --accent-soft: #dff1e6;
+      --accent-ink: #ffffff;
+      --focus: rgba(42,132,100,.26);
+      --gradient-a: rgba(186, 225, 211, .55);
+      --gradient-b: rgba(224, 200, 241, .48);
+      --gradient-c: rgba(253, 214, 187, .35);
+    }
+    html[data-accent="orange"] {
+      --accent: #f47a25;
+      --accent-hover: #df6514;
+      --accent-soft: #ffeddd;
+      --accent-ink: #202c22;
+      --focus: rgba(244,122,37,.28);
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --page: #172631;
+      --top: rgba(23, 36, 46, .97);
+      --rail: #1b2d36;
+      --surface: #223540;
+      --surface-soft: #20323c;
+      --ink: #dce9e6;
+      --ink-strong: #f2f8f5;
+      --muted: #a4b9b6;
+      --subtle: #91a6a5;
+      --line: #344b53;
+      --line-strong: #4c6870;
+      --grid-dot: rgba(214, 233, 228, .07);
+      --shadow: 0 24px 72px rgba(0, 0, 0, .14);
+      --ghost-hover: #29404a;
+      --chip: #253a44;
+      --accent: #6ac6a2;
+      --accent-hover: #8bdcb9;
+      --accent-soft: #244c45;
+      --accent-ink: #0f3026;
+      --focus: rgba(106,198,162,.29);
+      --gradient-a: rgba(78, 151, 130, .25);
+      --gradient-b: rgba(153, 112, 183, .19);
+      --gradient-c: rgba(240, 134, 80, .11);
+    }
+    html[data-theme="dark"][data-accent="orange"] {
+      --accent: #ff963e;
+      --accent-hover: #ffab65;
+      --accent-soft: #493728;
+      --accent-ink: #1a2524;
+      --focus: rgba(255,150,62,.34);
+    }
+    /* ========== 02 / GLOBAL ========== */
+    * { box-sizing: border-box; }
+    html { height: 100%; }
+    body { min-width: 320px; min-height: 100%; margin: 0; background: var(--page); color: var(--ink); }
+    button, textarea, input { font: inherit; }
+    button { cursor: pointer; }
+    button:disabled { opacity: .55; cursor: not-allowed; }
+    button:focus-visible, textarea:focus-visible, a:focus-visible {
+      outline: 3px solid var(--focus); outline-offset: 3px;
+    }
+    svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+    .app { height: 100dvh; min-height: 590px; display: grid; grid-template-rows: 76px minmax(0,1fr); }
+    /* ========== 03 / COMPACT SHARED HEADER ========== */
+    .topbar { z-index: 30; display: flex; align-items: center; justify-content: space-between; gap: 20px; min-width: 0; padding: 0 26px 0 22px; background: var(--top); border-bottom: 1px solid var(--line); }
+    .brand-block, .topbar-tools, .location, .theme-button, .palette { display: flex; align-items: center; }
+    .brand-block { width: 238px; gap: 11px; flex-shrink: 0; }
+    .brand-emblem { width: 39px; height: 39px; border-radius: 15px; display: grid; place-items: center; color: #2e7253; background: linear-gradient(135deg,#e8f3dc,#d2ecde 63%,#eeddf1); border: 1px solid rgba(46,114,83,.09); }
+    .brand-emblem svg { width: 22px; height: 22px; stroke-width: 1.7; }
+    .brand-name { display: block; color: var(--ink-strong); letter-spacing: -.042em; font-weight: 780; font-size: 16px; line-height: 1.05; white-space: nowrap; }
+    .brand-caption { display: block; margin-top: 5px; font-size: 9px; letter-spacing: .26em; font-weight: 750; color: var(--muted); }
+    .location { min-width: 0; margin-right: auto; gap: 10px; font-size: 12px; color: var(--muted); font-weight: 650; }
+    .location .divider-icon { color: var(--subtle); font-size: 20px; font-weight: 400; }
+    .location strong { color: var(--ink); font-weight: 760; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .topbar-tools { gap: 12px; flex-shrink: 0; }
+    .palette { gap: 9px; padding: 6px 8px 6px 11px; background: var(--surface-soft); border: 1px solid var(--line); border-radius: 999px; }
+    .palette-label { font-size: 10px; font-weight: 760; letter-spacing: .04em; color: var(--muted); margin-right: 2px; }
+    .swatch { width: 22px; height: 22px; padding: 3px; border-radius: 50%; border: 1.5px solid transparent; background: transparent; display: grid; place-items: center; }
+    .swatch > span { width: 13px; height: 13px; border-radius: 50%; display: block; }
+    .swatch.green > span { background: #369c78; }
+    .swatch.orange > span { background: #ff8c32; }
+    .swatch[aria-checked="true"] { border-color: var(--ink); }
+    .theme-button { height: 35px; gap: 7px; border-radius: 20px; background: var(--surface-soft); color: var(--ink); border: 1px solid var(--line); padding: 0 11px; font-size: 11px; font-weight: 750; }
+    .theme-button svg { width: 16px; height: 16px; }
+    .theme-button:hover, .swatch:hover { background: var(--ghost-hover); }
+    .primary { display: inline-flex; gap: 9px; align-items: center; justify-content: center; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); border-radius: 13px; font-weight: 790; padding: 13px 19px; box-shadow: 0 5px 13px var(--focus); transition: transform .15s ease, background .15s ease; }
+    .primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+    .primary svg { width: 17px; height: 17px; }
+    .top-new { border-radius: 11px; padding: 10px 15px; font-size: 11px; box-shadow: none; }
+    .top-new svg { width: 15px; height: 15px; }
+    .mobile-menu { display: none; height: 38px; width: 38px; flex-shrink: 0; border: 1px solid var(--line); border-radius: 11px; background: var(--surface); color: var(--ink); place-items: center; }
+    /* ========== 04 / TWO-PANE APPLICATION SHELL ========== */
+    .body-shell { display: grid; grid-template-columns: 258px minmax(0,1fr); min-height: 0; }
+    .sidebar { z-index: 20; min-height: 0; display: flex; flex-direction: column; padding: 25px 13px 16px; background: var(--rail); border-right: 1px solid var(--line); overflow-y: auto; scrollbar-width: thin; }
+    .sidebar-scroll { flex: 1; }
+    .group { margin-bottom: 29px; }
+    .group-label { margin: 0 12px 12px; text-transform: uppercase; color: var(--subtle); letter-spacing: .19em; font-size: 10px; font-weight: 850; }
+    .tool-link { position: relative; display: flex; align-items: center; gap: 13px; width: 100%; min-height: 46px; padding: 0 13px; margin: 3px 0; text-align: left; border: 1px solid transparent; border-radius: 12px; background: transparent; color: var(--muted); font-size: 13px; font-weight: 630; transition: background .16s ease, color .16s ease; }
+    .tool-link svg { width: 19px; height: 19px; stroke-width: 1.8; }
+    .tool-link span { min-width: 0; }
+    .tool-link .trailing { margin-left: auto; opacity: 0; width: 16px; height: 16px; }
+    .tool-link:hover { color: var(--ink); background: var(--ghost-hover); }
+    .tool-link.active { background: var(--accent-soft); color: var(--accent); font-weight: 825; border-color: var(--focus); }
+    .tool-link.active::before { content: ""; position: absolute; left: -14px; top: 10px; bottom: 10px; width: 4px; background: var(--accent); border-radius: 0 5px 5px 0; }
+    .tool-link.active .trailing { opacity: 1; }
+    .tool-link.secondary-link { min-height: 41px; }
+    .sidebar-note { border: 1px solid var(--line); background: var(--surface); border-radius: 16px; padding: 16px; position: relative; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,.015); }
+    .sidebar-note::after { content: "✳"; position: absolute; right: 8px; top: 0; color: var(--accent); font-size: 44px; opacity: .16; }
+    .sidebar-note strong { display: block; font-size: 12px; font-weight: 820; margin-bottom: 8px; color: var(--ink-strong); }
+    .sidebar-note p { margin: 0; font-size: 11px; color: var(--muted); line-height: 1.55; max-width: 165px; }
+    .sidebar-bottom { margin: 14px 4px 0; display: flex; justify-content: space-between; font-size: 10px; color: var(--subtle); }
+    /* ========== 05 / MAIN TOOL WORKSPACE ========== */
+    .workspace { position: relative; overflow-y: auto; min-width: 0; min-height: 0; isolation: isolate; background-color: var(--page); }
+    .workspace::before { content: ""; position: absolute; z-index: -2; inset: 0 0 auto; height: 780px; pointer-events: none; background-image: radial-gradient(var(--grid-dot) .7px, transparent .8px); background-size: 10px 10px; mask-image: linear-gradient(to bottom,rgba(0,0,0,.7),transparent); }
+    .workspace::after { content: ""; position: absolute; z-index: -1; pointer-events: none; right: -260px; top: -245px; width: min(66vw,950px); height: 680px; background: radial-gradient(ellipse at 38% 35%,var(--gradient-b),transparent 65%),radial-gradient(ellipse at 60% 47%,var(--gradient-a),transparent 66%),radial-gradient(ellipse at 42% 70%,var(--gradient-c),transparent 59%); filter: blur(12px); border-radius: 43% 57% 48% 52%; opacity: .88; }
+    .main-inner { width: min(100% - 100px,1120px); margin: 0 auto; padding: 43px 0 78px; }
+    .workspace-top { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 57px; }
+    .breadcrumb { display: flex; align-items: center; gap: 12px; font-size: 11px; font-weight: 850; letter-spacing: .17em; text-transform: uppercase; color: var(--muted); }
+    .breadcrumb .crumb-current { color: var(--accent); }
+    .workspace-top .prototype-pill { border: 1px solid var(--line); border-radius: 30px; background: var(--chip); padding: 7px 12px; font-size: 10px; font-weight: 690; color: var(--muted); white-space: nowrap; }
+    .main-content { max-width: 960px; }
+    .step-label { display: flex; align-items: center; gap: 10px; font-weight: 850; font-size: 12px; color: var(--accent); letter-spacing: .14em; }
+    .step-label .step-line { display: inline-block; height: 1px; width: 25px; background: var(--accent); opacity: .55; }
+    .hero-heading { margin: 20px 0 13px; font-size: clamp(38px, 4.2vw, 64px); line-height: 1.06; font-weight: 840; letter-spacing: -.061em; color: var(--ink-strong); }
+    .hero-description { margin: 0; font-size: 15px; line-height: 1.75; color: var(--muted); max-width: 760px; font-weight: 500; }
+    .composer { margin-top: 33px; overflow: hidden; border: 1.5px solid var(--line-strong); border-radius: 19px; background: var(--surface); box-shadow: var(--shadow); transition: border-color .16s, box-shadow .16s; }
+    .composer:focus-within { border-color: var(--accent); box-shadow: 0 0 0 4px var(--focus),var(--shadow); }
+    .composer textarea { display: block; width: 100%; min-height: 189px; padding: 29px 31px 9px; background: transparent; border: 0; outline: 0; resize: vertical; color: var(--ink-strong); font-size: 20px; font-weight: 620; line-height: 1.55; letter-spacing: -.025em; }
+    .composer textarea::placeholder { color: var(--subtle); font-weight: 510; }
+    .composer-footer { min-height: 77px; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 12px 16px 16px 31px; }
+    .composer-hint { font-size: 12px; font-weight: 600; color: var(--muted); line-height: 1.5; }
+    .composer-right { display: flex; align-items: center; gap: 9px; }
+    .icon-button { display: grid; place-items: center; width: 39px; height: 39px; border: 1px solid var(--line-strong); border-radius: 11px; color: var(--muted); background: var(--surface); }
+    .icon-button:hover { color: var(--accent); background: var(--accent-soft); border-color: var(--accent); }
+    .icon-button svg { width: 17px; height: 17px; }
+    .composer-action { padding: 11px 16px; font-size: 12px; border-radius: 11px; white-space: nowrap; }
+    .under-composer { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin: 14px 0 33px; }
+    .privacy { display: flex; align-items: flex-start; gap: 8px; font-size: 11px; color: var(--muted); line-height: 1.6; }
+    .privacy svg { width: 15px; height: 15px; margin-top: 1px; }
+    .keyboard-hint { flex-shrink: 0; font-size: 11px; color: var(--subtle); }
+    kbd { font-family: inherit; border: 1px solid var(--line); border-radius: 5px; padding: 2px 5px; background: var(--surface); }
+    .seeds-top { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 13px; }
+    .section-title { font-size: 11px; text-transform: uppercase; letter-spacing: .14em; font-weight: 820; color: var(--muted); }
+    .seeds-note { color: var(--subtle); font-size: 11px; }
+    .seed-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 11px; }
+    .seed-card { min-height: 95px; text-align: left; display: flex; flex-direction: column; justify-content: space-between; gap: 13px; background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 15px; padding: 16px 17px; font-size: 12px; font-weight: 620; line-height: 1.5; box-shadow: 0 4px 18px rgba(0,0,0,.012); transition: border-color .18s, transform .18s; }
+    .seed-card svg { margin-left: auto; color: var(--accent); width: 16px; height: 16px; }
+    .seed-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .endnote { display: flex; align-items: center; gap: 13px; margin-top: 35px; padding-top: 23px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; line-height: 1.65; }
+    .endnote-mark { color: var(--accent); font-size: 27px; line-height: 1; }
+    .endnote strong { color: var(--ink); }
+    /* ========== 06 / DEMO RESULT AND LIBRARY ========== */
+    .result { margin-top: 24px; border: 1px solid var(--line-strong); border-radius: 18px; background: var(--surface); overflow: hidden; box-shadow: var(--shadow); }
+    .result-head { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; gap: 14px; border-bottom: 1px solid var(--line); }
+    .result-eyebrow { font-size: 10px; text-transform: uppercase; letter-spacing: .15em; color: var(--accent); font-weight: 850; }
+    .result h2 { margin: 6px 0 0; font-size: 18px; color: var(--ink-strong); }
+    .result-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .secondary { display: flex; align-items: center; gap: 8px; border: 1px solid var(--line-strong); border-radius: 10px; padding: 9px 12px; background: var(--surface-soft); color: var(--ink); font-size: 11px; font-weight: 760; }
+    .secondary:hover { background: var(--accent-soft); border-color: var(--accent); }
+    .secondary svg { width: 15px; height: 15px; }
+    .result pre { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 12px; line-height: 1.8; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink); padding: 23px 26px 30px; margin: 0; max-height: 360px; overflow: auto; }
+    .result-disclaimer { background: var(--surface-soft); border-top: 1px solid var(--line); padding: 11px 24px; font-size: 11px; color: var(--muted); }
+    .saved-list { display: grid; gap: 12px; margin-top: 27px; }
+    .saved-item { display: flex; gap: 16px; align-items: center; padding: 19px 22px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; }
+    .saved-icon { height: 43px; width: 43px; flex-shrink: 0; display: grid; place-items: center; border-radius: 14px; color: var(--accent); background: var(--accent-soft); }
+    .saved-item-copy { min-width: 0; flex: 1; }
+    .saved-item-copy strong { display: block; color: var(--ink-strong); margin-bottom: 5px; font-size: 14px; }
+    .saved-item-copy p { color: var(--muted); font-size: 12px; margin: 0; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+    .saved-item-actions { display: flex; gap: 7px; }
+    .empty-state { background: var(--surface); border: 1px dashed var(--line-strong); border-radius: 19px; padding: 39px; margin-top: 28px; text-align: center; }
+    .empty-state .empty-mark { font-size: 33px; color: var(--accent); }
+    .empty-state h2 { font-size: 19px; margin: 12px 0 5px; color: var(--ink-strong); }
+    .empty-state p { font-size: 13px; color: var(--muted); margin: 0 auto 18px; max-width: 390px; line-height: 1.6; }
+    .overview-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 13px; margin-top: 30px; }
+    .overview-card { text-align: left; background: var(--surface); border: 1px solid var(--line); padding: 26px; border-radius: 18px; min-height: 185px; display: flex; flex-direction: column; align-items: flex-start; }
+    .overview-card:hover { border-color: var(--accent); }
+    .overview-card .saved-icon { margin-bottom: 15px; }
+    .overview-card strong { color: var(--ink-strong); font-size: 18px; margin-bottom: 8px; }
+    .overview-card p { color: var(--muted); font-size: 12px; line-height: 1.5; margin: 0; }
+    /* ========== 07 / RESPONSIVE ========== */
+    .scrim { display: none; }
+    @media (max-width: 1080px) {
+      .brand-block { width: 228px; }
+      .body-shell { grid-template-columns: 238px minmax(0,1fr); }
+      .main-inner { width: min(100% - 66px,1040px); }
+      .hero-heading { font-size: clamp(36px,4.9vw,57px); }
+    }
+    @media (max-width: 800px) {
+      .app { grid-template-rows: 69px minmax(0,1fr); }
+      .topbar { padding: 0 16px; gap: 12px; }
+      .mobile-menu { display: grid; }
+      .brand-block { width: auto; margin-right: auto; }
+      .location { display: none; }
+      .palette-label, .top-new span { display: none; }
+      .top-new { width: 36px; height: 36px; padding: 0; display: grid; place-items: center; }
+      .palette { gap: 4px; padding: 5px; }
+      .sidebar { position: fixed; top: 69px; left: 0; bottom: 0; width: min(285px,85vw); transform: translateX(-103%); box-shadow: 18px 0 40px rgba(0,0,0,.09); transition: transform .2s ease; }
+      body.nav-open .sidebar { transform: translateX(0); }
+      body.nav-open .scrim { display: block; position: fixed; inset: 69px 0 0; z-index: 15; background: rgba(14,27,30,.38); }
+      .body-shell { display: block; }
+      .workspace { height: 100%; }
+      .main-inner { width: min(100% - 48px,860px); padding-top: 36px; }
+      .workspace-top { margin-bottom: 43px; }
+      .hero-heading { font-size: clamp(39px,7vw,56px); }
+    }
+    @media (max-width: 540px) {
+      .topbar { gap: 8px; padding: 0 11px; }
+      .brand-emblem { width: 33px; height: 33px; border-radius: 12px; }
+      .brand-name { font-size: 13px; }
+      .brand-caption { font-size: 8px; }
+      .topbar-tools { gap: 6px; }
+      .theme-button { padding: 0 9px; }
+      .theme-button span { display: none; }
+      .palette .swatch { width: 20px; height: 20px; }
+      .main-inner { width: calc(100% - 32px); padding: 28px 0 52px; }
+      .workspace-top { margin-bottom: 36px; }
+      .prototype-pill { display: none; }
+      .breadcrumb { letter-spacing: .1em; font-size: 9px; }
+      .hero-heading { font-size: clamp(36px,9vw,48px); }
+      .hero-description { font-size: 13px; }
+      .composer { margin-top: 26px; border-radius: 15px; }
+      .composer textarea { min-height: 185px; font-size: 17px; padding: 22px 18px 8px; }
+      .composer-footer { padding: 10px 11px 11px 18px; min-height: 65px; }
+      .composer-hint { font-size: 10px; max-width: 150px; }
+      .composer-action { padding: 11px 12px; }
+      .composer-action span { display: none; }
+      .under-composer { align-items: flex-start; }
+      .keyboard-hint { display: none; }
+      .seed-grid { grid-template-columns: 1fr; }
+      .seed-card { min-height: 64px; flex-direction: row; align-items: center; }
+      .endnote { align-items: flex-start; }
+      .result-head { padding: 16px; align-items: flex-start; flex-direction: column; }
+      .result pre { padding: 17px; }
+      .saved-item { flex-wrap: wrap; padding: 16px; }
+      .saved-item-actions { width: 100%; justify-content: flex-end; }
+      .overview-grid { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+  </style>
+  <script defer>
+    (() => {
+      'use strict';
+      // This is a UI prototype, not an OpenAI integration. No network calls are made.
+      const tools = {
+        world: {
+          name:'World Builder', area:'WORLD BLUEPRINT', phase:'THE SPARK', title:'What do you want to create?',
+          description:'A world begins with a single idea. Give it words. The structure comes next.',
+          placeholder:'Describe a world you can already imagine…',
+          hint:'Start with the fragment you can already feel.',
+          seeds:['A city built around an ancient living tree', 'A world where forgotten memories become places', 'A kingdom shared by humans and gentle giants'],
+          output:'Living World Blueprint'
+        },
+        character: {
+          name:'Character Builder', area:'CHARACTER BLUEPRINT', phase:'THE FIRST BREATH', title:'Who is waiting to exist?',
+          description:'Begin with a voice, a contradiction, or a moment. Discover the person from there.',
+          placeholder:'Describe the character taking shape in your imagination…',
+          hint:'A single defining detail is enough to begin.',
+          seeds:['A cartographer who cannot find their own home', 'A healer afraid of their unusual gift', 'An archivist guarding a dangerous secret'],
+          output:'Living Character Blueprint'
+        },
+        organization: {
+          name:'Organization Builder', area:'ORGANIZATION BLUEPRINT', phase:'THE PURPOSE', title:'What brings them together?',
+          description:'Every guild, society, and institution begins with a shared purpose.',
+          placeholder:'Describe an organization, its purpose, or the tension that holds it together…',
+          hint:'Start with what this group believes or protects.',
+          seeds:['A guild trading in impossible maps', 'A society dedicated to preserving lost stories', 'A council that governs the changing seasons'],
+          output:'Organization Blueprint'
+        },
+        idea: {
+          name:'Idea Builder', area:'IDEA BLUEPRINT', phase:'THE POSSIBILITY', title:'What if something changed?',
+          description:'Follow a small question into a surprisingly big possibility.',
+          placeholder:'Write a question, a feeling, or a strange possibility…',
+          hint:'You do not need a complete thought.',
+          seeds:['What if cities could dream?', 'What if every promise left a visible mark?', 'What if shadows remembered the future?'],
+          output:'Idea Blueprint'
+        },
+        narrative: {
+          name:'Narrative Builder', area:'NARRATIVE BLUEPRINT', phase:'THE FIRST THREAD', title:'What story wants telling?',
+          description:'Find the tension, the turning point, and the thread worth following.',
+          placeholder:'Describe a story premise, conflict, or turning point…',
+          hint:'Start with the change that cannot be undone.',
+          seeds:['A reunion at the edge of a vanishing world', 'Two rivals inherit the same prophecy', 'A quiet village begins receiving letters from tomorrow'],
+          output:'Narrative Blueprint'
+        },
+        book: {
+          name:'Book Builder', area:'BOOK BLUEPRINT', phase:'THE FIRST PAGE', title:'What book will you bring to life?',
+          description:'Give your book a heartbeat before you give it chapters.',
+          placeholder:'Describe the book, its central promise, or its reader…',
+          hint:'Begin with the experience you want the reader to have.',
+          seeds:['An illustrated field guide to imaginary oceans', 'A quiet fantasy about belonging', 'A mystery told through recovered letters'],
+          output:'Book Blueprint'
+        },
+        series: {
+          name:'Series Builder', area:'SERIES BLUEPRINT', phase:'THE THROUGHLINE', title:'What connects the larger story?',
+          description:'Shape a recurring world, evolving cast, or long arc that keeps unfolding.',
+          placeholder:'Describe what ties your books or stories together…',
+          hint:'Start with the idea that can grow across many works.',
+          seeds:['Five books set in one migrating city', 'A family saga spanning three impossible eras', 'Standalone adventures linked by a hidden map'],
+          output:'Series Blueprint'
+        }
+      };
+      const $ = id => document.getElementById(id);
+      const state = { tool:'world', section:'tool', result:'', drafts:[], selectedDraft:null };
+      const icon = (name) => {
+        const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+        const use = document.createElementNS('http://www.w3.org/2000/svg','use');
+        use.setAttribute('href','#icon-'+name); svg.append(use); svg.setAttribute('aria-hidden','true');
+        return svg;
+      };
+      const store = (key, value) => { try { localStorage.setItem(key,JSON.stringify(value)); return true; } catch (_) { return false; } };
+      const readDrafts = () => { try { const x = JSON.parse(localStorage.getItem('lws-drafts') || '[]'); return Array.isArray(x) ? x.slice(0,50) : []; } catch (_) { return []; } };
+      const clean = v => String(v ?? '').replace(/\s+/g,' ').trim();
+      const toast = message => { const node=$('status'); node.textContent=message; node.hidden=false; clearTimeout(toast.timer); toast.timer=setTimeout(()=>{node.hidden=true},3500); };
+      function closeNav() { document.body.classList.remove('nav-open'); $('menuToggle').setAttribute('aria-expanded','false'); }
+      function setActive(id) {
+        document.querySelectorAll('.tool-link[data-tool]').forEach(node => {
+          const active = node.dataset.tool === id;
+          node.classList.toggle('active',active);
+          if (active) node.setAttribute('aria-current','page'); else node.removeAttribute('aria-current');
+        });
+      }
+      function seedButtons(items) {
+        const parent=$('seedGrid'); parent.replaceChildren();
+        items.forEach(text => {
+          const button=document.createElement('button'); button.className='seed-card'; button.type='button';
+          const label=document.createElement('span'); label.textContent=text;
+          button.append(label,icon('arrow-up-right'));
+          button.addEventListener('click',()=>{ $('intent').value=text; $('intent').focus(); updateCounter(); toast('Idea added. Make it your own.'); });
+          parent.append(button);
+        });
+      }
+      function renderTool(id, clearInput=false) {
+        const t=tools[id]; if (!t) return;
+        state.section='tool'; state.tool=id; state.result='';
+        $('toolView').hidden=false; $('collectionView').hidden=true; $('overviewView').hidden=true; $('result').hidden=true;
+        $('topLocation').textContent=t.name; $('workspaceCrumb').textContent=t.area;
+        $('stepLabel').textContent='01  '+t.phase; $('heroTitle').textContent=t.title;
+        $('heroDescription').textContent=t.description; $('intent').placeholder=t.placeholder;
+        $('composerHint').textContent=t.hint; $('outputLabel').textContent=t.output;
+        $('seedCount').textContent='Try a starting point'; seedButtons(t.seeds); setActive(id);
+        if (clearInput) $('intent').value=''; updateCounter();
+        $('workspace').scrollTo({top:0,behavior:'instant'}); closeNav();
+      }
+      function simpleBlueprint(type, idea) {
+        const name=clean(idea).slice(0,72) || 'Untitled creation';
+        return '# '+type+' — Concept Sketch\n\n'+
+          '> Prototype only · structure preview, not AI-generated\n\n'+
+          '## Identity\n'+
+          '- Name: '+name+'\n'+
+          '- Type: '+type+'\n'+
+          '- Intent: '+clean(idea)+'\n'+
+          '- Essence: To be discovered and refined.\n\n'+
+          '## World / Entity Structure\n'+
+          '- Ontology: To be defined\n'+
+          '- Space: To be explored\n'+
+          '- Time: To be explored\n'+
+          '- Qualia: To be explored\n'+
+          '- Living Mesh: Relationships to discover\n\n'+
+          '## Next Step\n'+
+          'Connect a creation engine to generate the full Blueprint.\n';
+      }
+      function previewBlueprint() {
+        const idea=$('intent').value.trim();
+        if (!idea) { $('intent').focus(); toast('Add a little idea first.'); return; }
+        state.result=simpleBlueprint(tools[state.tool].output,idea);
+        $('resultText').textContent=state.result; $('result').hidden=false;
+        $('result').scrollIntoView({behavior:'smooth',block:'nearest'});
+      }
+      function updateCounter() {
+        const n=$('intent').value.length;
+        $('charCount').textContent=n ? n+' characters' : 'Your words, your world';
+      }
+      function saveDraft() {
+        const value=$('intent').value.trim(); if (!value) { toast('Write an idea before saving.'); return; }
+        const item={id:String(Date.now()),tool:state.tool,idea:value,created:new Date().toISOString()};
+        state.drafts.unshift(item); state.drafts=state.drafts.slice(0,50);
+        if (store('lws-drafts',state.drafts)) toast('Draft saved locally in this browser.');
+        else toast('Storage not available; try copying your idea instead.');
+      }
+      function renderLibrary() {
+        state.section='library'; $('toolView').hidden=true; $('collectionView').hidden=false; $('overviewView').hidden=true;
+        $('topLocation').textContent='My Blueprints'; $('workspaceCrumb').textContent='YOUR CREATIONS'; setActive('library');
+        const container=$('savedList'); container.replaceChildren();
+        $('libraryCount').textContent=state.drafts.length+' local '+(state.drafts.length===1?'draft':'drafts');
+        $('emptyLibrary').hidden=state.drafts.length>0;
+        for (const item of state.drafts) {
+          const row=document.createElement('article'); row.className='saved-item';
+          const badge=document.createElement('div'); badge.className='saved-icon'; badge.append(icon(item.tool==='character'?'user':'layers'));
+          const copy=document.createElement('div'); copy.className='saved-item-copy';
+          const title=document.createElement('strong'); title.textContent=(tools[item.tool]?.name||'Blueprint')+' · Draft';
+          const desc=document.createElement('p'); desc.textContent=item.idea;
+          copy.append(title,desc);
+          const actions=document.createElement('div'); actions.className='saved-item-actions';
+          const open=document.createElement('button'); open.type='button'; open.className='secondary'; open.textContent='Open';
+          open.addEventListener('click',()=>{renderTool(tools[item.tool]?item.tool:'world',true); $('intent').value=item.idea; updateCounter(); toast('Draft loaded from this browser.');});
+          const remove=document.createElement('button'); remove.type='button'; remove.className='secondary'; remove.setAttribute('aria-label','Delete draft'); remove.append(icon('trash'));
+          remove.addEventListener('click',()=>{state.drafts=state.drafts.filter(d=>d.id!==item.id); store('lws-drafts',state.drafts);renderLibrary();toast('Local draft deleted.');});
+          actions.append(open,remove); row.append(badge,copy,actions);container.append(row);
+        }
+        $('workspace').scrollTo({top:0,behavior:'instant'}); closeNav();
+      }
+      function renderOverview() {
+        state.section='overview'; $('toolView').hidden=true; $('collectionView').hidden=true; $('overviewView').hidden=false;
+        $('topLocation').textContent='Studio Home'; $('workspaceCrumb').textContent='YOUR STUDIO'; setActive('overview');
+        $('homeSavedCount').textContent=state.drafts.length+' saved locally';
+        $('workspace').scrollTo({top:0,behavior:'instant'}); closeNav();
+      }
+      function switchView(id, clear=true) {
+        if (id==='library') renderLibrary(); else if(id==='overview')renderOverview();else renderTool(id,clear);
+      }
+      function setTheme(theme) {
+        document.documentElement.dataset.theme=theme;
+        const dark=theme==='dark';
+        $('themeIcon').setAttribute('href',dark?'#icon-sun':'#icon-moon');
+        $('themeText').textContent=dark?'Light mode':'Dark mode';
+        $('themeToggle').setAttribute('aria-label',dark?'Switch to light theme':'Switch to dark theme');
+        try { localStorage.setItem('lws-theme',theme); } catch (_) {}
+      }
+      function setAccent(accent) {
+        document.documentElement.dataset.accent=accent;
+        document.querySelectorAll('.swatch').forEach(node=>node.setAttribute('aria-checked',String(node.dataset.color===accent)));
+        try { localStorage.setItem('lws-accent',accent); } catch (_) {}
+      }
+      async function copyText(text) {
+        try { await navigator.clipboard.writeText(text);toast('Copied to clipboard.'); }
+        catch (_) { toast('Clipboard unavailable here. Select and copy the preview text.'); }
+      }
+      function downloadMarkdown() {
+        const blob=new Blob([state.result],{type:'text/markdown;charset=utf-8'});
+        const url=URL.createObjectURL(blob); const a=document.createElement('a');
+        a.href=url;a.download=(state.tool||'world')+'-blueprint-concept.md';a.click();
+        setTimeout(()=>URL.revokeObjectURL(url),1000);
+      }
+      document.addEventListener('DOMContentLoaded',()=>{
+        state.drafts=readDrafts();
+        document.querySelectorAll('[data-tool]').forEach(button=>button.addEventListener('click',()=>switchView(button.dataset.tool)));
+        document.querySelectorAll('.swatch').forEach(button=>button.addEventListener('click',()=>setAccent(button.dataset.color)));
+        $('themeToggle').addEventListener('click',()=>setTheme(document.documentElement.dataset.theme==='light'?'dark':'light'));
+        $('menuToggle').addEventListener('click',()=>{const open=document.body.classList.toggle('nav-open');$('menuToggle').setAttribute('aria-expanded',String(open));});
+        $('scrim').addEventListener('click',closeNav);
+        $('newCreation').addEventListener('click',()=>{renderTool(state.section==='tool'?state.tool:'world',true);$('intent').focus();});
+        $('previewButton').addEventListener('click',previewBlueprint);
+        $('intent').addEventListener('input',updateCounter);
+        $('intent').addEventListener('keydown',e=>{if ((e.metaKey||e.ctrlKey)&&e.key==='Enter'){e.preventDefault();previewBlueprint();}});
+        $('saveButton').addEventListener('click',saveDraft);
+        $('copyButton').addEventListener('click',()=>copyText(state.result));
+        $('downloadButton').addEventListener('click',downloadMarkdown);
+        $('emptyStart').addEventListener('click',()=>renderTool('world',true));
+        $('homeWorld').addEventListener('click',()=>renderTool('world',true));
+        $('homeCharacter').addEventListener('click',()=>renderTool('character',true));
+        $('microphoneButton').addEventListener('click',()=>{
+          const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+          if (!SpeechRecognition) { toast('Voice input is not supported by this browser.'); return; }
+          try {
+            const recognition=new SpeechRecognition();recognition.lang='en-US'; recognition.interimResults=false;
+            recognition.onresult=event=>{const spoken=event.results[0][0].transcript;$('intent').value+=( $('intent').value.trim()?' ':'')+spoken;updateCounter();toast('Voice added to your idea.');};
+            recognition.onerror=()=>toast('Microphone unavailable or permission declined.');
+            recognition.start(); toast('Listening for your idea…');
+          } catch (_) {toast('Microphone unavailable in this preview.');}
+        });
+        document.addEventListener('keydown',e=>{if(e.key==='Escape')closeNav();});
+        setTheme(document.documentElement.dataset.theme==='dark'?'dark':'light');
+        setAccent(document.documentElement.dataset.accent==='orange'?'orange':'green');
+        renderTool('world',true);
+      });
+    })();
+  </script>
+</head>
+<body>
+  <!-- Local SVG icon set: no fonts, assets, CDNs, or dependencies. -->
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+    <symbol id="icon-flower" viewBox="0 0 24 24"><path d="M12 12c-4-2-4-7-1-9 3 2 4 5 1 9Zm0 0c2-4 7-4 9-1-2 3-5 4-9 1Zm0 0c4 2 4 7 1 9-3-2-4-5-1-9Zm0 0c-2 4-7 4-9 1 2-3 5-4 9-1Z"/><circle cx="12" cy="12" r="1.5"/></symbol>
+    <symbol id="icon-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-7h6v7"/></symbol>
+    <symbol id="icon-layers" viewBox="0 0 24 24"><path d="m12 2 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5M3 17l9 5 9-5"/></symbol>
+    <symbol id="icon-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol>
+    <symbol id="icon-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-5 5-7 8-7s7 2 8 7"/></symbol>
+    <symbol id="icon-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2 20c.7-4.6 3.4-7 7-7s6.3 2.4 7 7H2Zm13-15c3 .5 4 5.5 1 7m3 1c2 1 3 3 3 7h-4"/></symbol>
+    <symbol id="icon-sparkle" viewBox="0 0 24 24"><path d="m12 2 2.1 7.9L22 12l-7.9 2.1L12 22l-2.1-7.9L2 12l7.9-2.1L12 2Z"/></symbol>
+    <symbol id="icon-pen" viewBox="0 0 24 24"><path d="m3 21 5-1 12-12a3 3 0 0 0-4-4L4 16l-1 5Z"/><path d="m14 6 4 4"/></symbol>
+    <symbol id="icon-book" viewBox="0 0 24 24"><path d="M12 6c-3-2-6-2-10-1v14c4-1 7-1 10 1 3-2 6-2 10-1V5c-4-1-7-1-10 1Zm0 0v14"/></symbol>
+    <symbol id="icon-books" viewBox="0 0 24 24"><path d="M3 4h5v16H3zM10 7h5v13h-5zM17 4l4 1-2 15-4-1"/></symbol>
+    <symbol id="icon-moon" viewBox="0 0 24 24"><path d="M20 15.5A8.7 8.7 0 0 1 8.5 4 8.8 8.8 0 1 0 20 15.5Z"/></symbol>
+    <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.5 1.5m11.2 11.2 1.5 1.5M2 12h2m16 0h2M4.9 19.1l1.5-1.5M17.6 6.4l1.5-1.5"/></symbol>
+    <symbol id="icon-plus" viewBox="0 0 24 24"><path d="M12 4v16M4 12h16"/></symbol>
+    <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></symbol>
+    <symbol id="icon-arrow-up-right" viewBox="0 0 24 24"><path d="M6 18 18 6M7 6h11v11"/></symbol>
+    <symbol id="icon-chevron" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="icon-mic" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="13" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4m-4 0h8"/></symbol>
+    <symbol id="icon-lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="12" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="icon-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h3"/></symbol>
+    <symbol id="icon-save" viewBox="0 0 24 24"><path d="M4 3h13l3 3v15H4zM7 3v7h9V3M7 21v-8h10v8"/></symbol>
+    <symbol id="icon-download" viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 17v4h16v-4"/></symbol>
+    <symbol id="icon-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 14h10l1-14M10 11v6m4-6v6"/></symbol>
+    <symbol id="icon-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  </svg>
+  <div class="app">
+    <header class="topbar" aria-label="Global toolbar">
+      <button class="mobile-menu" id="menuToggle" type="button" aria-label="Open tool menu" aria-controls="sidebar" aria-expanded="false"><svg><use href="#icon-menu"/></svg></button>
+      <div class="brand-block">
+        <div class="brand-emblem"><svg><use href="#icon-flower"/></svg></div>
+        <div><span class="brand-name">Living World</span><span class="brand-caption">STUDIO</span></div>
+      </div>
+      <div class="location"><span>Studio</span><span class="divider-icon">/</span><strong id="topLocation">World Builder</strong></div>
+      <div class="topbar-tools">
+        <div class="palette" role="radiogroup" aria-label="Action color">
+          <span class="palette-label">Accent</span>
+          <button class="swatch green" type="button" role="radio" data-color="green" aria-checked="true" aria-label="Green action color" title="Use green for selected actions"><span></span></button>
+          <button class="swatch orange" type="button" role="radio" data-color="orange" aria-checked="false" aria-label="Orange action color" title="Use orange for selected actions"><span></span></button>
+        </div>
+        <button class="theme-button" id="themeToggle" type="button" aria-label="Switch to dark theme"><svg><use id="themeIcon" href="#icon-moon"/></svg><span id="themeText">Dark mode</span></button>
+        <button class="primary top-new" id="newCreation" type="button"><svg><use href="#icon-plus"/></svg><span>New creation</span></button>
+      </div>
+    </header>
+    <div class="body-shell">
+      <aside class="sidebar" id="sidebar" aria-label="Tool navigation">
+        <div class="sidebar-scroll">
+          <nav class="group" aria-label="Workspace">
+            <p class="group-label">Workspace</p>
+            <button class="tool-link secondary-link" type="button" data-tool="overview"><svg><use href="#icon-home"/></svg><span>Studio Home</span><svg class="trailing"><use href="#icon-chevron"/></svg></button>
+            <button class="tool-link secondary-link" type="button" data-tool="library"><svg><use href="#icon-layers"/></svg><span>My Blueprints</span><svg class="trailing"><use href="#icon-chevron"/></svg></button>
+          </nav>
+          <nav class="group" aria-label="Creative tools">
+            <p class="group-label">Creation tools</p>
+            <button class="tool-link active" type="button" data-tool="world" aria-current="page"><svg><use href="#icon-globe"/></svg><span>World Builder</span><svg class="trailing"><use href="#icon-chevron"/></svg></button>
+            <button class="tool-link" type="button" data-tool="character"><svg><use href="#icon-user"/></svg><span>Character Builder</span><svg class="trailing"><use href="#icon-chevron"/></svg></button>
+            <button class="tool-link" type="button" data-tool="organization"><svg><use href="#icon-users"/></svg><span>Organization Builder</span><svg class="trailing"><use href="#icon-chevron"/></svg></button>
+            <button class="tool-link" type="button" data-tool="idea"><svg><use href="#icon-sparkle"/></svg><span>Idea Builder</span><svg class="trailing"><use href="#icon-chevron"/></svg></button>
+            <button class="tool-link" type="button" data-tool="narrative"><svg><use href="#icon-pen"/></svg><span>Narrative Builder</span><svg class="trailing"><use href="#icon-chevron"/></svg></button>
+            <button class="tool-link" type="button" data-tool="book"><svg><use href="#icon-book"/></svg><span>Book Builder</span><svg class="trailing"><use href="#icon-chevron"/></svg></button>
+            <button class="tool-link" type="button" data-tool="series"><svg><use href="#icon-books"/></svg><span>Series Builder</span><svg class="trailing"><use href="#icon-chevron"/></svg></button>
+          </nav>
+        </div>
+        <div class="sidebar-note"><strong>Imagine without limits.</strong><p>Every little idea can become a world of its own.</p></div>
+        <div class="sidebar-bottom"><span>Living World Studio</span><span>UI concept / 01</span></div>
+      </aside>
+      <div class="scrim" id="scrim" aria-hidden="true"></div>
+      <main class="workspace" id="workspace" tabindex="-1">
+        <div class="main-inner">
+          <div class="workspace-top"><div class="breadcrumb"><span>Living World Studio</span><span>/</span><span class="crumb-current" id="workspaceCrumb">World Blueprint</span></div><span class="prototype-pill">✳ &nbsp; Creative workspace</span></div>
+          <section id="toolView" class="main-content" aria-labelledby="heroTitle">
+            <div class="step-label"><span id="stepLabel">01 THE SPARK</span><span class="step-line"></span></div>
+            <h1 class="hero-heading" id="heroTitle">What do you want to create?</h1>
+            <p class="hero-description" id="heroDescription">A world begins with a single idea. Give it words. The structure comes next.</p>
+            <section class="composer" aria-label="Describe your creation">
+              <label class="sr-only" for="intent">Your creative idea</label>
+              <textarea id="intent" maxlength="10000" spellcheck="true" placeholder="Describe a world you can already imagine…"></textarea>
+              <div class="composer-footer">
+                <span class="composer-hint" id="composerHint">Start with the fragment you can already feel.</span>
+                <div class="composer-right">
+                  <button class="icon-button" id="microphoneButton" type="button" aria-label="Dictate an idea" title="Voice input, when supported"><svg><use href="#icon-mic"/></svg></button>
+                  <button class="primary composer-action" id="previewButton" type="button"><span>Preview blueprint</span><svg><use href="#icon-arrow"/></svg></button>
+                </div>
+              </div>
+            </section>
+            <div class="under-composer"><div class="privacy"><svg><use href="#icon-lock"/></svg><span>Prototype only — no AI calls or server uploads. Drafts save locally in your browser.</span></div><span class="keyboard-hint"><kbd>⌘ / Ctrl</kbd> + <kbd>Enter</kbd> to preview</span><span id="charCount" class="sr-only" aria-live="off">Your words, your world</span></div>
+            <div id="result" class="result" hidden>
+              <div class="result-head"><div><span class="result-eyebrow">Blueprint preview</span><h2 id="outputLabel">Living World Blueprint</h2></div><div class="result-actions"><button type="button" class="secondary" id="saveButton"><svg><use href="#icon-save"/></svg>Save draft</button><button type="button" class="secondary" id="copyButton"><svg><use href="#icon-copy"/></svg>Copy</button><button type="button" class="secondary" id="downloadButton"><svg><use href="#icon-download"/></svg>Download</button></div></div>
+              <pre id="resultText"></pre><div class="result-disclaimer">This is a local, structural placeholder for the future generation engine — not an AI-generated result.</div>
+            </div>
+            <div class="seeds-top"><span class="section-title">A few seeds to get started</span><span id="seedCount" class="seeds-note">Try a starting point</span></div>
+            <div class="seed-grid" id="seedGrid"></div>
+            <div class="endnote"><span class="endnote-mark">✳</span><span><strong>Intent → Blueprint → Living world.</strong><br>The Studio brings your intention into focus. Your imagination stays in charge.</span></div>
+          </section>
+          <section id="collectionView" class="main-content" aria-labelledby="libraryTitle" hidden>
+            <div class="step-label">YOUR CREATIVE ARCHIVE <span class="step-line"></span></div>
+            <h1 class="hero-heading" id="libraryTitle">My Blueprints</h1>
+            <p class="hero-description">Return to a seed you planted and keep growing it. Drafts in this prototype are saved only to this browser.</p>
+            <div class="seeds-top" style="margin-top:27px"><span class="section-title" id="libraryCount">0 local drafts</span></div>
+            <div id="savedList" class="saved-list"></div>
+            <div class="empty-state" id="emptyLibrary"><div class="empty-mark">✳</div><h2>Room for your first idea.</h2><p>Preview a blueprint and select Save draft. It will appear here on this browser.</p><button class="primary" id="emptyStart" type="button"><svg><use href="#icon-plus"/></svg>Start a world</button></div>
+          </section>
+          <section id="overviewView" class="main-content" aria-labelledby="overviewTitle" hidden>
+            <div class="step-label">WELCOME TO YOUR STUDIO <span class="step-line"></span></div>
+            <h1 class="hero-heading" id="overviewTitle">A little room for infinite worlds.</h1>
+            <p class="hero-description">Choose a creative tool and follow an idea wherever it wants to go. <span id="homeSavedCount">0 saved locally</span>.</p>
+            <div class="overview-grid">
+              <button class="overview-card" id="homeWorld" type="button"><span class="saved-icon"><svg><use href="#icon-globe"/></svg></span><strong>Build a world</strong><p>Create the first spark of a world blueprint.</p></button>
+              <button class="overview-card" id="homeCharacter" type="button"><span class="saved-icon"><svg><use href="#icon-user"/></svg></span><strong>Create a character</strong><p>Find the voice, purpose, and essence of someone new.</p></button>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+  <div id="status" class="sr-only" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

@@ -1,0 +1,12 @@
+baseURL: http://localhost:1410/
+locale: en-us
+title: My World Blueprint
+# Phase 1 serves static/index.html unchanged. No Hugo template renders the page yet.
+disableKinds:
+  - home
+  - section
+  - taxonomy
+  - term
+  - RSS
+  - sitemap
+  - robotsTXT

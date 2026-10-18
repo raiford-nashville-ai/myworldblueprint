@@ -1,0 +1,28 @@
+# Hugo-generated output
+/site/public/
+/site/resources/_gen/
+/site/.hugo_build.lock
+
+# Local dependencies, tooling, and caches
+node_modules/
+.cache/
+.tools/
+.hugo_cache/
+
+# Credentials and local environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Runtime files
+*.log
+*.pid
+
+# OS and editor artifacts
+.DS_Store
+Thumbs.db
+.idea/
+*.swp
+*.swo
