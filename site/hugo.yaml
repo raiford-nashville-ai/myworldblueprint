@@ -1,12 +1,39 @@
 baseURL: http://localhost:1410/
 locale: en-us
 title: My World Blueprint
-# Phase 1 serves static/index.html unchanged. No Hugo template renders the page yet.
+# The homepage is rendered by layouts/home.html and the shared Studio partials.
 disableKinds:
-  - home
   - section
   - taxonomy
   - term
   - RSS
   - sitemap
   - robotsTXT
+
+# Folder instructions are development metadata, never content or public downloads.
+# Hugo 0.168 uses mount.files; excludeFiles is deprecated.
+module:
+  mounts:
+    - source: archetypes
+      target: archetypes
+      files: &sourceFiles
+        - "! AGENTS.md"
+        - "! **/AGENTS.md"
+    - source: assets
+      target: assets
+      files: *sourceFiles
+    - source: content
+      target: content
+      files: *sourceFiles
+    - source: data
+      target: data
+      files: *sourceFiles
+    - source: i18n
+      target: i18n
+      files: *sourceFiles
+    - source: layouts
+      target: layouts
+      files: *sourceFiles
+    - source: static
+      target: static
+      files: *sourceFiles

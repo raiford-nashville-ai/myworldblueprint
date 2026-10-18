@@ -1,0 +1,14 @@
+{{ define "main" }}
+<a class="skip" href="#workspace">Skip to workspace</a>
+<div class="studio">
+{{ partial "studio/sidebar.html" . }}
+<main>
+{{ partial "studio/topbar.html" . }}
+<div class="canvas">
+{{ partial "studio/workspace.html" . }}
+{{ partial "studio/creative-direction.html" . }}
+</div>
+<footer class="footer">NOTHING FINISHED. EVERYTHING POSSIBLE.</footer>
+</main>
+</div>
+{{ end }}

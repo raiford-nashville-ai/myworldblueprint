@@ -1,5 +1,14 @@
 # Hugo build plan
 
+## Current status
+
+- Phase 1 is preserved in the initial main-branch commit.
+- Phase 2 is implemented on refactor/hugo-asset-layers for review; no merge or deployment is authorized.
+- Approved reference: specs/REFERENCE_UI.html, copied directly from mocks/polished-sidebar.html.
+- Active sources are site/layouts/ and site/assets/, not site/static/index.html.
+- See specs/asset-architecture.md for layer ownership and specs/refactor-verification.md for test coverage and limitations.
+- Phase 1 below describes the historical baseline. Its single-file restriction was superseded by the explicit phase-2 refactor request.
+
 ## 1. Publish the approved page for review
 
 - Use Hugo Extended v0.168.0, verified against the latest stable GitHub release for this setup.
@@ -21,11 +30,13 @@ Acceptance:
 
 ## 2. Extract the approved interface
 
-- After approval, move the shared Studio shell into Hugo layouts and partials.
-- Extract layered CSS and JavaScript into assets without changing the approved experience.
-- Move Tool definitions and Layout Maps into structured data.
-- Keep navigation registry-driven and Tool workspaces independently configurable.
-- Compare against phase 1 in desktop and mobile browsers.
+- Move the shared Studio shell into Hugo layouts and partials without changing the approved experience.
+- Extract CSS to matching reset, tokens, semantic, base, layout, and components layer files, assembled through assets/css/main.css.
+- Extract JavaScript into native modules built by Hugo's js.Build.
+- Keep Tool definitions and creative-question structures in assets/js/tools.js; illustrative responses remain separate in fixtures.js.
+- Retain registry-driven navigation and independently configurable Tool questions.
+- Compare the production build against the frozen phase-1 reference with zero-pixel-difference screenshots in desktop and mobile browsers.
+- A general model-generated Layout Map renderer is deferred; current Tools use the approved common workspace structure.
 
 ## 3. Introduce canonical content
 

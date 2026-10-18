@@ -20,6 +20,10 @@ node_modules/
 *.log
 *.pid
 
+# Browser test artifacts
+/test-results/
+/playwright-report/
+
 # OS and editor artifacts
 .DS_Store
 Thumbs.db

@@ -1,0 +1,958 @@
+/* components: component appearance, states, responsive rules, and emergent motion */
+@layer components {
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+  }
+  .brand {
+    font-weight: 800;
+  }
+  nav {
+    margin-top: 65px;
+    display: grid;
+    gap: 9px;
+  }
+  .nav-tool {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    border: 1px solid var(--tool-border);
+    color: var(--muted);
+    text-align: left;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+  .nav-tool:hover {
+    color: var(--ink);
+  }
+  .nav-tool[aria-pressed="true"] {
+    color: var(--ink);
+  }
+  .nav-tool-icon {
+    flex-shrink: 0;
+    line-height: 1;
+    text-align: center;
+    color: var(--muted);
+  }
+  .nav-tool[aria-pressed="true"] .nav-tool-icon {
+    color: var(--accent);
+  }
+  .side-note {
+    margin-top: auto;
+    padding-top: 60px;
+    font-size: 10px;
+    color: var(--quiet);
+  }
+  .menu {
+    display: none;
+    background: none;
+    border: 0;
+    color: var(--ink);
+    padding: 0;
+  }
+  .eyebrow {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    color: var(--accent);
+    margin: 0 0 25px;
+  }
+  .intro {
+    color: var(--muted);
+    font-size: 13px;
+    margin: 0 0 34px;
+  }
+  .intention {
+    width: 100%;
+    display: block;
+    min-height: 190px;
+    resize: vertical;
+    border: 1px solid var(--control-border);
+    border-radius: 3px;
+    padding: 22px;
+    color: var(--ink);
+    font-size: 18px;
+    line-height: 1.6;
+  }
+  .intention::placeholder {
+    color: var(--quiet);
+  }
+  .intention:focus {
+    outline: 1px solid var(--control-outline);
+    outline-offset: 0;
+  }
+  .actions {
+    margin-top: 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+  }
+  .note {
+    font-size: 10px;
+    color: var(--quiet);
+    margin: 0;
+    max-width: 210px;
+  }
+  .primary {
+    background: var(--accent);
+    color: var(--action-color);
+    border: 0;
+    border-radius: 3px;
+    padding: 13px 19px;
+    font-weight: 700;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .primary span {
+    margin-left: 15px;
+  }
+  .primary:hover {
+    background: var(--action-hover-background);
+  }
+  .direction h2 {
+    font-size: 12px;
+    font-weight: 500;
+    margin: 0 0 28px;
+    color: var(--muted);
+  }
+  .field {
+    margin-bottom: 25px;
+  }
+  .field label {
+    display: block;
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .field select,
+  .field textarea {
+    display: block;
+    width: 100%;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    padding: 7px 0;
+    background: transparent;
+    color: var(--ink);
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  .field select option {
+    background: var(--canvas);
+    color: var(--ink);
+  }
+  .field textarea {
+    min-height: 69px;
+    resize: vertical;
+  }
+  .field textarea::placeholder {
+    color: var(--quiet);
+  }
+  .direction details {
+    margin-top: 30px;
+  }
+  .direction summary {
+    font-size: 10px;
+    color: var(--quiet);
+    cursor: pointer;
+  }
+  .direction details .field {
+    margin-top: 22px;
+  }
+  .status {
+    font-size: 11px;
+    min-height: 20px;
+    margin: 18px 0 0;
+  }
+  .result h2 {
+    font-size: 23px;
+    font-weight: 600;
+    margin: 0 0 15px;
+  }
+  .result p {
+    font-size: 12px;
+    color: var(--muted);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .result dl {
+    display: grid;
+    grid-template-columns: 95px minmax(0, 1fr);
+    gap: 10px;
+    font-size: 11px;
+  }
+  .result dt {
+    color: var(--quiet);
+  }
+  .result dd {
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .result .note {
+    max-width: none;
+    margin-top: 22px;
+    font-size: 10px;
+  }
+  .skip {
+    position: absolute;
+    top: -100px;
+    left: 15px;
+    z-index: 10;
+    background: var(--accent);
+    color: var(--skip-color);
+    padding: 10px;
+  }
+  .skip:focus {
+    top: 15px;
+  }
+  @media (max-width: 1100px) {
+    .actions {
+      align-items: start;
+      flex-direction: column;
+    }
+    .primary {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+    }
+    .note {
+      max-width: none;
+    }
+  }
+  @media (max-width: 780px) {
+    .direction h2 {
+      margin-bottom: 22px;
+    }
+  }
+  @media (max-width: 600px) {
+    .sidebar {
+      display: none;
+    }
+    .sidebar.open {
+      display: flex;
+    }
+    nav {
+      margin-top: 22px;
+    }
+    .side-note {
+      display: none;
+    }
+    .menu {
+      display: block;
+      font-size: 12px;
+    }
+    .intention {
+      font-size: 17px;
+      min-height: 180px;
+    }
+    .actions {
+      gap: 17px;
+    }
+  }
+  /* Sidebar-only refinement. The canvas and creative-direction column are unchanged. */
+  .sidebar {
+    padding: 32px 10px 24px;
+    background: linear-gradient(
+      165deg,
+      var(--sidebar-background),
+      var(--sidebar-background-2) 65%
+    );
+    border-right: 1px solid var(--sidebar-border-right);
+  }
+  .brand {
+    margin: 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    letter-spacing: 0.9px;
+    line-height: 1.4;
+  }
+  .brand-symbol {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 38px;
+    flex-shrink: 0;
+    border: 1px solid var(--brand-mark-border);
+    border-radius: 3px;
+    color: var(--accent);
+    font-size: 23px;
+    font-weight: 400;
+    box-shadow: inset 0 0 0 4px var(--brand-mark-box-shadow);
+  }
+  .sidebar-kicker {
+    margin: 12px 12px 0;
+    color: var(--sidebar-label-color);
+    font:
+      9px/1.7 ui-monospace,
+      monospace;
+    letter-spacing: 1.1px;
+  }
+  .sidebar-section-label {
+    margin: 35px 13px 12px;
+    font-size: 9px;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: var(--sidebar-label-color);
+    font-weight: 600;
+  }
+  .sidebar nav {
+    margin-top: 0;
+    gap: 8px;
+  }
+  .nav-tool {
+    gap: 11px;
+    padding: 15px 12px;
+    min-height: 76px;
+    background: var(--tool-background-2);
+    border-color: var(--tool-border-color);
+    border-radius: 5px;
+    box-shadow: 0 2px 4px var(--tool-box-shadow-2);
+  }
+  .nav-tool:hover {
+    background: var(--tool-hover-background-2);
+    border-color: var(--tool-hover-border-color-2);
+  }
+  .nav-tool[aria-pressed="true"] {
+    background: linear-gradient(
+      110deg,
+      var(--tool-selected-background-2),
+      var(--tool-selected-background-3)
+    );
+    border-color: var(--tool-selected-border-color-2);
+    box-shadow:
+      inset 3px 0 var(--accent),
+      0 3px 8px var(--tool-selected-box-shadow-2);
+  }
+  .nav-tool-icon {
+    width: 23px;
+    font-size: 26px;
+    align-self: center;
+  }
+  .nav-tool-copy {
+    min-width: 0;
+  }
+  .nav-tool-name {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: -0.2px;
+  }
+  .nav-tool-description {
+    display: block;
+    color: var(--tool-color);
+    font-size: 10px;
+    line-height: 1.6;
+    margin-top: 4px;
+  }
+  .sidebar-future {
+    margin: 27px 13px 0;
+  }
+  .sidebar-future .sidebar-section-label {
+    margin: 0 0 13px;
+  }
+  .future-item {
+    font-size: 11px;
+    color: var(--sidebar-label-color);
+    padding: 8px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .future-item span:last-child {
+    font:
+      8px ui-monospace,
+      monospace;
+    letter-spacing: 0.5px;
+    color: var(--sidebar-label-color);
+  }
+  .sidebar .side-note {
+    margin: auto 13px 0;
+    padding: 28px 0 0;
+    font-size: 10px;
+    line-height: 1.9;
+    color: var(--sidebar-note-color);
+  }
+  .side-note strong {
+    display: block;
+    font-size: 9px;
+    letter-spacing: 1.4px;
+    color: var(--sidebar-note-color-2);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  .sidebar-bottom {
+    border-top: 1px solid var(--sidebar-footer-border-top);
+    margin-top: 19px;
+    padding-top: 13px;
+    font:
+      8px/1.8 ui-monospace,
+      monospace;
+    letter-spacing: 1px;
+    color: var(--sidebar-footer-color);
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  @media (min-width: 1101px) {
+    .sidebar {
+      padding-left: 8px;
+      padding-right: 8px;
+    }
+  }
+  @media (min-width: 601px) and (max-width: 1100px) {
+    .sidebar {
+      padding: 30px 6px 22px;
+    }
+    .brand {
+      gap: 9px;
+      margin: 0 8px;
+      font-size: 12px;
+    }
+    .brand-symbol {
+      width: 25px;
+      height: 34px;
+    }
+    .sidebar-kicker {
+      margin-left: 8px;
+      font-size: 8px;
+    }
+    .sidebar-section-label {
+      margin-left: 9px;
+    }
+    .nav-tool {
+      gap: 8px;
+      padding: 13px 9px;
+      min-height: 76px;
+    }
+    .nav-tool-icon {
+      width: 20px;
+      font-size: 23px;
+    }
+    .nav-tool-name {
+      font-size: 13px;
+    }
+    .nav-tool-description {
+      font-size: 9px;
+    }
+    .sidebar-future {
+      margin-left: 9px;
+      margin-right: 9px;
+    }
+    .future-item {
+      font-size: 10px;
+    }
+  }
+  @media (max-width: 600px) {
+    .sidebar {
+      padding: 24px 12px;
+    }
+    .sidebar .side-note,
+    .sidebar-future,
+    .sidebar-kicker {
+      display: none;
+    }
+    .sidebar-section-label {
+      margin-top: 25px;
+    }
+    .sidebar nav {
+      margin-top: 0;
+    }
+    .nav-tool {
+      min-height: 74px;
+    }
+    .brand {
+      margin-left: 12px;
+    }
+  }
+  /* Top-aligned workspace: avoid the former vertical auto-centering. */
+  .theme-toggle {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 6px 10px;
+    font:
+      11px Arial,
+      sans-serif;
+    white-space: nowrap;
+  }
+  .theme-toggle:hover {
+    color: var(--ink);
+    background: var(--control-hover-background);
+  }
+  .intention {
+    background: var(--field-fill);
+    border-color: var(--field-border);
+  }
+  .intention:focus {
+    outline-color: var(--focus);
+    border-color: var(--focus);
+  }
+  .status {
+    color: var(--status-ink);
+  }
+  :root[data-theme="light"] .sidebar {
+    background: linear-gradient(
+      165deg,
+      var(--sidebar-background),
+      var(--sidebar-background-2) 65%
+    );
+    border-right-color: var(--sidebar-border-right-color);
+  }
+  :root[data-theme="light"] .brand-symbol {
+    border-color: var(--brand-mark-border-color);
+    box-shadow: inset 0 0 0 4px var(--brand-mark-box-shadow);
+  }
+  :root[data-theme="light"] .sidebar-kicker,
+  :root[data-theme="light"] .sidebar-section-label,
+  :root[data-theme="light"] .future-item,
+  :root[data-theme="light"] .future-item span:last-child,
+  :root[data-theme="light"] .sidebar-bottom {
+    color: var(--sidebar-footer-color);
+  }
+  :root[data-theme="light"] .nav-tool {
+    background: var(--tool-background);
+    border-color: var(--tool-border-color);
+    box-shadow: 0 2px 4px var(--tool-box-shadow);
+  }
+  :root[data-theme="light"] .nav-tool:hover {
+    background: var(--tool-hover-background);
+    border-color: var(--tool-hover-border-color);
+  }
+  :root[data-theme="light"] .nav-tool[aria-pressed="true"] {
+    background: linear-gradient(
+      110deg,
+      var(--tool-selected-background),
+      var(--tool-selected-background-2)
+    );
+    border-color: var(--tool-selected-border-color);
+    box-shadow:
+      inset 3px 0 var(--accent),
+      0 2px 5px var(--tool-selected-box-shadow);
+  }
+  :root[data-theme="light"] .nav-tool-description,
+  :root[data-theme="light"] .sidebar .side-note {
+    color: var(--tool-color);
+  }
+  :root[data-theme="light"] .side-note strong {
+    color: var(--sidebar-note-color);
+  }
+  :root[data-theme="light"] .sidebar-bottom {
+    border-top-color: var(--sidebar-footer-border-top-color);
+  }
+  :root[data-theme="light"] .primary {
+    background: var(--action-background);
+    color: var(--action-color);
+  }
+  :root[data-theme="light"] .primary:hover {
+    background: var(--action-hover-background);
+  }
+  .idea-tips {
+    margin: -15px 0 27px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.8;
+  }
+  .idea-tips summary {
+    width: fit-content;
+    cursor: pointer;
+    font-size: 11px;
+    color: var(--accent);
+  }
+  .idea-tips summary:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+  .idea-tips p {
+    margin: 15px 0 10px;
+  }
+  .idea-tips ul {
+    margin: 12px 0;
+    padding-left: 18px;
+  }
+  .idea-tips li {
+    padding: 4px 0;
+  }
+  .idea-tips strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .idea-tips .example {
+    font-style: italic;
+    padding-left: 14px;
+    border-left: 2px solid var(--line);
+  }
+  .blueprint-mode .tool-workspace > .eyebrow,
+  .blueprint-mode .tool-workspace > .intro,
+  .blueprint-mode #world-tips {
+    display: none;
+  }
+  .blueprint-mode .intention {
+    min-height: 64px;
+    height: 74px;
+    padding: 12px 15px;
+    font-size: 13px;
+  }
+  .blueprint-mode .actions {
+    margin-top: 10px;
+    flex-direction: row;
+    align-items: center;
+  }
+  .blueprint-mode .actions .note {
+    font-size: 9px;
+  }
+  .blueprint-mode .primary {
+    width: auto;
+    padding: 9px 14px;
+    font-size: 11px;
+  }
+  .blueprint-mode .status {
+    margin-top: 12px;
+    font-size: 10px;
+  }
+  .result {
+    margin-top: 23px;
+  }
+  .blueprint-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 17px;
+    flex-wrap: wrap;
+  }
+  .blueprint-toolbar > span {
+    font:
+      9px ui-monospace,
+      monospace;
+    color: var(--quiet);
+    letter-spacing: 1px;
+  }
+  .blueprint-toolbar div {
+    display: flex;
+    gap: 18px;
+  }
+  .quiet-action {
+    border: 0;
+    background: none;
+    color: var(--muted);
+    padding: 3px 0;
+    font-size: 10px;
+  }
+  .quiet-action:hover {
+    color: var(--ink);
+  }
+  .blueprint-sheet {
+    color: var(--paper-ink);
+    background: var(--paper);
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        var(--blueprint-background-image),
+        var(--blueprint-background-image) 1px,
+        transparent 1px,
+        transparent 4px
+      ),
+      radial-gradient(
+        ellipse at top left,
+        var(--blueprint-background-image-2),
+        transparent 75%
+      );
+    padding: 32px;
+    position: relative;
+    border-radius: 2px;
+    box-shadow:
+      0 2px 0 var(--blueprint-box-shadow),
+      0 5px 0 var(--blueprint-box-shadow-2),
+      0 7px 0 var(--blueprint-box-shadow-3),
+      0 18px 35px var(--blueprint-box-shadow-4);
+    border: 1px solid var(--blueprint-border);
+    overflow: hidden;
+  }
+  .blueprint-sheet::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: var(--blueprint-background);
+  }
+  .sheet-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    font:
+      9px/1.7 ui-monospace,
+      monospace;
+    letter-spacing: 1px;
+    color: var(--paper-muted);
+    margin: 4px 0 29px;
+  }
+  .draft-stamp {
+    border: 1px solid var(--stamp-border);
+    padding: 3px 7px;
+    color: var(--stamp-color);
+    align-self: start;
+    transform: rotate(-3deg);
+  }
+  .blueprint-sheet h2 {
+    font:
+      600 clamp(29px, 3vw, 43px)/1.1 Georgia,
+      serif;
+    letter-spacing: -1px;
+    color: var(--paper-ink);
+    margin: 0 0 14px;
+    outline-offset: 5px;
+  }
+  .sheet-slogan {
+    font:
+      italic 17px/1.5 Georgia,
+      serif;
+    color: var(--paper-muted);
+    margin: 0 0 20px;
+  }
+  .blueprint-sheet .sheet-essence {
+    font-size: 13px;
+    line-height: 1.85;
+    white-space: normal;
+    color: var(--paper-ink);
+    margin: 0 0 25px;
+  }
+  .sheet-section {
+    border-top: 1px solid var(--paper-rule);
+    margin-top: 24px;
+    padding-top: 19px;
+  }
+  .sheet-label {
+    font:
+      10px ui-monospace,
+      monospace;
+    letter-spacing: 0.8px;
+    color: var(--sheet-color);
+    text-transform: uppercase;
+    margin: 0 0 13px;
+    display: block;
+  }
+  .sheet-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 23px;
+  }
+  .sheet-fact b {
+    display: block;
+    font:
+      600 14px Georgia,
+      serif;
+    margin-bottom: 5px;
+  }
+  .blueprint-sheet .sheet-fact p {
+    font:
+      12px/1.8 Arial,
+      sans-serif;
+    color: var(--paper-muted);
+    white-space: normal;
+    margin: 0;
+  }
+  .entity-cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .entity-card {
+    border: 1px solid var(--entity-border);
+    background: var(--paper-card);
+    padding: 13px 11px;
+    color: var(--paper-ink);
+    border-radius: 2px;
+  }
+  .entity-card summary {
+    cursor: pointer;
+    font:
+      600 14px/1.4 Georgia,
+      serif;
+  }
+  .entity-card small {
+    display: block;
+    color: var(--paper-muted);
+    font:
+      9px/1.7 ui-monospace,
+      monospace;
+    margin: 7px 0;
+  }
+  .blueprint-sheet .entity-card p {
+    font-size: 11px;
+    line-height: 1.8;
+    white-space: normal;
+    color: var(--paper-muted);
+  }
+  .entity-card summary:focus-visible,
+  .blueprint-sheet summary:focus-visible {
+    outline: 2px solid var(--blueprint-outline);
+    outline-offset: 3px;
+  }
+  .mesh-triple {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 10px;
+    font-size: 11px;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--mesh-border-bottom);
+  }
+  .mesh-triple span:nth-child(2) {
+    font:
+      10px ui-monospace,
+      monospace;
+    color: var(--mesh-color);
+    align-self: center;
+  }
+  .mesh-triple span:last-child {
+    text-align: right;
+  }
+  .blueprint-sheet ul {
+    padding-left: 18px;
+    margin: 9px 0 0;
+    font-size: 12px;
+    line-height: 1.9;
+  }
+  .sheet-close {
+    font:
+      italic 16px/1.7 Georgia,
+      serif;
+    color: var(--sheet-color-2);
+    margin-top: 24px;
+  }
+  .sheet-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    border-top: 1px solid var(--paper-rule);
+    padding-top: 14px;
+    margin-top: 28px;
+    font:
+      8px/1.8 ui-monospace,
+      monospace;
+    color: var(--paper-muted);
+  }
+  .submitted-brief {
+    margin: 26px 0 0;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .submitted-brief summary {
+    cursor: pointer;
+  }
+  .submitted-brief p {
+    font-size: 11px;
+    line-height: 1.8;
+  }
+  .submitted-brief dl {
+    font-size: 10px;
+  }
+  /* Preserve the reference's caption priority without a catch-all override layer. */
+  .result .preview-caption {
+    /* Template indentation must not become preformatted caption lines. */
+    white-space: normal;
+    color: var(--quiet);
+    font-size: 10px;
+    line-height: 1.8;
+    margin: 20px 0 0;
+  }
+  .primary:disabled {
+    opacity: 0.65;
+    cursor: wait;
+  }
+  @media (max-width: 1100px) {
+    .blueprint-sheet {
+      padding: 24px;
+    }
+    .entity-cards {
+      grid-template-columns: 1fr;
+    }
+    .blueprint-mode .actions {
+      flex-wrap: wrap;
+    }
+  }
+  @media (max-width: 780px) {
+    .sheet-columns {
+      gap: 18px;
+    }
+  }
+  @media (max-width: 600px) {
+    .blueprint-sheet {
+      padding: 22px 18px;
+    }
+    .sheet-columns {
+      grid-template-columns: 1fr;
+    }
+    .sheet-meta {
+      font-size: 8px;
+      margin-bottom: 24px;
+    }
+    .blueprint-mode .actions .note {
+      max-width: 145px;
+    }
+    .sheet-footer {
+      flex-direction: column;
+      gap: 5px;
+    }
+    .mesh-triple {
+      font-size: 10px;
+      gap: 6px;
+    }
+    .mesh-triple span:nth-child(2) {
+      font-size: 9px;
+    }
+  }
+  /* AI MAINTENANCE CONTRACT — EMERGENT MOTION
+   - State changes dissolve, never slide, zoom, bounce, or spring.
+   - Use emerge(update) from assets/js/motion.js for Blueprint View, expanded intention, Tool or theme changes.
+   - Native transition: 360ms cross-dissolve of old/new page snapshots. Geometry changes
+     happen behind snapshots; disable browser-default size/position interpolation.
+   - Fallback: 200ms fade out, update while invisible, 200ms fade in (400ms total).
+   - Keep durations within 200–500ms. Do not add independent entrance animations.
+   - Honor reduced motion with an immediate update. Never force scrolling or move
+     keyboard focus until the new view has finished emerging; use preventScroll.
+   - Generation latency is separate from transition timing. No simulated streaming jumps.
+*/
+  ::view-transition-group(root) {
+    animation: none;
+  }
+  ::view-transition-old(root) {
+    animation: emergence-out var(--emergence-duration) var(--emergence-ease)
+      both;
+    mix-blend-mode: normal;
+  }
+  ::view-transition-new(root) {
+    animation: emergence-in var(--emergence-duration) var(--emergence-ease) both;
+    mix-blend-mode: normal;
+  }
+  @keyframes emergence-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes emergence-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation: none;
+    }
+  }
+}

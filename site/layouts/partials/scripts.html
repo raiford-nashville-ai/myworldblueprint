@@ -1,0 +1,4 @@
+{{ $options := dict "targetPath" "js/main.js" "target" "es2020" "minify" hugo.IsProduction }}
+{{ $js := resources.Get "js/main.js" | js.Build $options }}
+{{ if hugo.IsProduction }}{{ $js = $js | fingerprint "sha384" }}{{ end }}
+<script src="{{ $js.RelPermalink }}" defer{{ with $js.Data.Integrity }} integrity="{{ . }}" crossorigin="anonymous"{{ end }}></script>

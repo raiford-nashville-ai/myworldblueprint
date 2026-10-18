@@ -1,0 +1,10 @@
+/* CSS ENTRY POINT — processed by Hugo resources.ExecuteAsTemplate.
+   Filenames map one-to-one to cascade layers. Keep this order explicit.
+   No browser imports, extra CSS build dependency, or unlayered presentation rules.
+   Responsive rules live in the layer they modify. Components use semantic tokens. */
+@layer reset, tokens, semantic, base, layout, components;
+{{ range slice "reset" "tokens" "semantic" "base" "layout" "components" }}
+{{ with resources.Get (printf "css/%s.css" .) }}
+{{ .Content }}
+{{ else }}{{ errorf "Missing CSS layer" }}{{ end }}
+{{ end }}

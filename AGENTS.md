@@ -1,16 +1,31 @@
 # Project instructions
 
+## Folder instructions
+
+- This file defines repository-wide defaults. Before working in a folder, read applicable AGENTS.md files from the root down to that folder.
+- Folder instructions define local purpose, ownership, and boundaries; they do not silently grant permission to change protected sources.
+- blueprints/ is read-only by default. Writing there requires explicit user approval for the blueprint change; website work does not grant that approval.
+- Keep a concise AGENTS.md in every maintained source folder, including intentionally reserved Hugo folders. State what belongs there, what does not, and any approval gates.
+- Do not add project instructions to dependencies, generated output, caches, or reports.
+- Do not copy all parent instructions into children. Keep general Git and project policy here and add only local direction below.
+- Keep guidance files excluded from Hugo's mounted components and public output; maintain exclusion tests when adding folders.
+
 ## Scope
 
 - Read existing files before editing. Prefer focused changes.
 - Treat blueprints/master-blueprint.md and specs/ as architectural context.
 - blueprints/world.md is currently empty; do not invent canonical world content.
-- Current website source: site/static/index.html, initially copied from mocks/polished-sidebar.html.
+- Website source: site/layouts/ and site/assets/. The homepage is layouts/home.html, using baseof.html and Studio partials.
+- Preserve specs/REFERENCE_UI.html as the byte-identical copy of mocks/polished-sidebar.html. Do not update the reference to hide regressions.
 - Preserve mocks/ as design history. Do not synchronize or overwrite mocks without a request.
-- Keep the single-page implementation intact until a layout extraction is authorized.
+- Do not recreate site/static/index.html; it would collide with Hugo's rendered homepage.
+- CSS entry point: assets/css/main.css. Files map directly to reset, tokens, semantic, base, layout, and components layers, in that order.
+- Keep raw palette values in tokens.css, theme/role mappings in semantic.css, and responsive rules in the layer they modify. Components consume semantic tokens, never palette values directly.
+- Use Hugo's resource pipeline for CSS assembly and js.Build for JavaScript modules. Production assets are minified, fingerprinted, and linked with integrity metadata.
+- Add Tool identity, accessible input label, writing-tip visibility, and creative questions in assets/js/tools.js. Add matching illustrative fixtures in fixtures.js until a real engine is authorized.
 - Hugo publishes static content. The current generation response is a labeled simulation, not an AI service.
 - Keep the clean canvas, polished Tool sidebar, tactile Blueprint View, and light/dark modes.
-- Follow the emergent-motion contract documented inside the page: controlled 200–500ms dissolves, no sudden movement, reduced-motion support.
+- Follow the emergent-motion contract in assets/css/components.css and assets/js/motion.js: controlled 200–500ms dissolves, no sudden movement, reduced-motion support.
 - Use blueprints/prompts.md for user-request templates. Do not repeat system-level world definitions in each request.
 
 ## Git identity
@@ -63,6 +78,11 @@
 - Target Hugo Extended v0.168.0 for this baseline. Check hugo version before builds.
 - Build: hugo --source site --destination /tmp/myworldblueprint-hugo-build.
 - Preview: hugo server --source site --bind 127.0.0.1 --port 1410 --baseURL http://localhost:1410/ --disableFastRender --noHTTPCache.
-- Check JavaScript syntax and verify UI changes in a browser when available.
-- Do not describe syntax-only checks as browser testing.
-- Keep public/, generated resources, Hugo locks, caches, logs, secrets, and installed binaries untracked.
+- Install locked test dependencies with npm ci; .npmrc disables executable symlinks for pCloud compatibility.
+- Install test browsers: node node_modules/@playwright/test/cli.js install chromium firefox.
+- Run npm run test:structure and npm test. Set HUGO_BIN if the pinned executable is not on PATH or in the documented cache path.
+- Browser tests build and serve production output on loopback port 1412. Do not reuse an unrelated server or weaken visual comparisons to obtain a pass.
+- Visual tests compare all pixels, including antialiasing, against the frozen reference in the same browser. Reduced motion is used for stable endpoint screenshots; motion behavior has separate tests.
+- Review playwright-report/ for screenshots and traces. Record actual browser coverage and unsupported engines.
+- Do not describe syntax-only checks or automated accessibility checks as a complete browser/accessibility certification.
+- Keep public/, generated resources, browser reports, Hugo locks, caches, logs, secrets, and installed binaries untracked.

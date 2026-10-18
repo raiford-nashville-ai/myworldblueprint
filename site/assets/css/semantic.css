@@ -1,0 +1,134 @@
+/* semantic: role-based tokens and theme mappings */
+@layer semantic {
+  :root {
+    color-scheme: dark;
+    --canvas: var(--color-292a2b);
+    --nav: var(--color-222323);
+    --ink: var(--color-f2f0eb);
+    --muted: var(--color-b2b0aa);
+    --quiet: var(--color-a6a69f);
+    --line: var(--color-5b5e57);
+    --field: var(--color-252727);
+    --accent: var(--color-efa05b);
+    --space: 28px;
+    --rail: 210px;
+  }
+  @media (max-width: 1100px) {
+    :root {
+      --rail: 180px;
+    }
+  }
+  :root {
+    --field-fill: var(--color-20222240);
+    --field-border: var(--color-777973);
+    --focus: var(--color-c7b9a4);
+    --status-ink: var(--color-d7c9b9);
+    --grain-opacity: 0.11;
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --canvas: var(--color-f1f0eb);
+    --nav: var(--color-e6e7df);
+    --ink: var(--color-292e28);
+    --muted: var(--color-5b6356);
+    --quiet: var(--color-62695c);
+    --line: var(--color-a8aea0);
+    --field: var(--color-f8f8f3);
+    --accent: var(--color-a95012);
+    --field-fill: var(--color-f8f8f370);
+    --field-border: var(--color-949c89);
+    --focus: var(--color-796e53);
+    --status-ink: var(--color-76512e);
+    --grain-opacity: 0.065;
+  }
+  :root {
+    --paper: var(--color-e5dfcd);
+    --paper-ink: var(--color-323b34);
+    --paper-muted: var(--color-60675c);
+    --paper-rule: var(--color-b7b8a4);
+    --paper-card: var(--color-ffffff29);
+  }
+  :root {
+    --emergence-duration: var(--duration-dissolve);
+    --emergence-phase: var(--duration-fade-phase);
+    --emergence-ease: var(--ease-emergence);
+  }
+  :root {
+    --tool-border: var(--color-484b47);
+    --tool-background: var(--color-2a2c2b);
+    --tool-box-shadow: var(--color-00000012);
+    --tool-hover-background: var(--color-343734);
+    --tool-hover-border-color: var(--color-676c62);
+    --tool-selected-background: var(--color-343731);
+    --tool-selected-border-color: var(--color-727669);
+    --tool-selected-box-shadow: var(--color-00000012);
+    --control-background: var(--color-20222240);
+    --control-border: var(--color-777973);
+    --control-outline: var(--color-c7b9a4);
+    --control-border-color: var(--color-c7b9a4);
+    --action-color: var(--color-292622);
+    --action-hover-background: var(--color-f6b174);
+    --control-color: var(--color-d7c9b9);
+    --skip-color: var(--color-222);
+    --sidebar-background: var(--color-272927);
+    --sidebar-background-2: var(--color-222423);
+    --sidebar-border-right: var(--color-3d403a);
+    --brand-mark-border: var(--color-77776b);
+    --brand-mark-box-shadow: var(--color-ffffff03);
+    --sidebar-label-color: var(--color-aaa99f);
+    --tool-background-2: var(--color-2b2e2b);
+    --tool-border-color: var(--color-42473e);
+    --tool-box-shadow-2: var(--color-00000014);
+    --tool-hover-background-2: var(--color-343831);
+    --tool-hover-border-color-2: var(--color-69705f);
+    --tool-selected-background-2: var(--color-3a3e34);
+    --tool-selected-background-3: var(--color-32362f);
+    --tool-selected-border-color-2: var(--color-717762);
+    --tool-selected-box-shadow-2: var(--color-00000018);
+    --tool-color: var(--color-b7bbaa);
+    --sidebar-note-color: var(--color-b4b5a9);
+    --sidebar-note-color-2: var(--color-d0c4ac);
+    --sidebar-footer-border-top: var(--color-44493e);
+    --sidebar-footer-color: var(--color-aaa99f);
+    --control-hover-background: var(--color-80808012);
+    --blueprint-background-image: var(--color-4c543505);
+    --blueprint-background-image-2: var(--color-ffffff65);
+    --blueprint-box-shadow: var(--color-b7b3a0);
+    --blueprint-box-shadow-2: var(--color-d0c9b7);
+    --blueprint-box-shadow-3: var(--color-b4af9c);
+    --blueprint-box-shadow-4: var(--color-0003);
+    --blueprint-border: var(--color-f5efdb);
+    --blueprint-background: var(--color-aa6b3d);
+    --stamp-border: var(--color-9a7351);
+    --stamp-color: var(--color-805737);
+    --sheet-color: var(--color-686b56);
+    --entity-border: var(--color-bfc1ae);
+    --blueprint-outline: var(--color-835326);
+    --mesh-border-bottom: var(--color-bfc1ae);
+    --mesh-color: var(--color-835326);
+    --sheet-color-2: var(--color-59634f);
+  }
+  :root[data-theme="light"] {
+    --sidebar-background: var(--color-e9eae3);
+    --sidebar-background-2: var(--color-dfe2d7);
+    --sidebar-border-right-color: var(--color-c5cbbc);
+    --brand-mark-border-color: var(--color-9ca38d);
+    --brand-mark-box-shadow: var(--color-ffffff30);
+    --sidebar-footer-color: var(--color-616954);
+    --tool-background: var(--color-e8ebe1);
+    --tool-border-color: var(--color-c1c8b6);
+    --tool-box-shadow: var(--color-28302006);
+    --tool-hover-background: var(--color-e0e5d6);
+    --tool-hover-border-color: var(--color-969f86);
+    --tool-selected-background: var(--color-d6ddc9);
+    --tool-selected-background-2: var(--color-e0e5d6);
+    --tool-selected-border-color: var(--color-929d7c);
+    --tool-selected-box-shadow: var(--color-28302008);
+    --tool-color: var(--color-5b6550);
+    --sidebar-note-color: var(--color-555d47);
+    --sidebar-footer-border-top-color: var(--color-bdc5b0);
+    --action-background: var(--color-efa05b);
+    --action-color: var(--color-292622);
+    --action-hover-background: var(--color-f6b174);
+  }
+}

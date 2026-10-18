@@ -1,0 +1,7 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{ site.Title }}</title>
+<meta name="description" content="A creative workbench for worldbuilding. Explore a static Blueprint View demonstration.">
+{{ $css := resources.Get "css/main.css" | resources.ExecuteAsTemplate "css/main.css" . }}
+{{ if hugo.IsProduction }}{{ $css = $css | minify | fingerprint "sha384" }}{{ end }}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}"{{ with $css.Data.Integrity }} integrity="{{ . }}" crossorigin="anonymous"{{ end }}>
