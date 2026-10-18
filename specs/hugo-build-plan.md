@@ -3,7 +3,8 @@
 ## Current status
 
 - Phase 1 is preserved in the initial main-branch commit.
-- Phase 2 is implemented on refactor/hugo-asset-layers for review; no merge or deployment is authorized.
+- Phase 2 is merged into main at e029b0a; the merged feature/setup branches were cleaned up after approval.
+- Netlify configuration from feat/netlify-deployment is approved for merge into main. The approved static prototype is live through a manual deployment; Git-based continuous deployment still requires GitHub App authorization. See specs/netlify-deployment.md.
 - Approved reference: specs/REFERENCE_UI.html, copied directly from mocks/polished-sidebar.html.
 - Active sources are site/layouts/ and site/assets/, not site/static/index.html.
 - See specs/asset-architecture.md for layer ownership and specs/refactor-verification.md for test coverage and limitations.

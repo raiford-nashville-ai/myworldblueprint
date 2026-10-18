@@ -16,6 +16,9 @@ node_modules/
 *.pem
 *.key
 
+# Netlify local project links, state, and caches
+.netlify/
+
 # Runtime files
 *.log
 *.pid

@@ -1,0 +1,29 @@
+# Repository root is the Netlify base directory; Hugo sources live in site/.
+[build]
+  command = 'hugo --source site --environment production --gc --minify --baseURL "${DEPLOY_PRIME_URL:-$URL}/" --panicOnWarning'
+  publish = "site/public"
+
+[build.environment]
+  HUGO_VERSION = "0.168.0"
+  HUGO_EXTENDED = "true"
+  NODE_VERSION = "22"
+
+# Missing paths must remain real 404s; this is not an SPA fallback deployment.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "DENY"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# Hugo fingerprints production bundles; immutable caching is safe for these paths.
+[[headers]]
+  for = "/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

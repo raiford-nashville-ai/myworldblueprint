@@ -28,6 +28,15 @@
 - Follow the emergent-motion contract in assets/css/components.css and assets/js/motion.js: controlled 200–500ms dissolves, no sudden movement, reduced-motion support.
 - Use blueprints/prompts.md for user-request templates. Do not repeat system-level world definitions in each request.
 
+## Deployment
+
+- Netlify build configuration lives in root netlify.toml. Follow specs/netlify-deployment.md for project identity, live status, and remaining authorization steps.
+- The current live site was published manually; GitHub continuous deployment is not yet verified.
+- Repository policy disables deploy keys. Do not bypass it or disable SSH host verification; use an authorized Netlify GitHub App connection.
+- Keep deployment credentials, local .netlify/ state, and generated public files out of Git.
+- Build for the actual deployment URL, not the localhost baseURL used for local review.
+- Deploy only with user authorization and verify the target project before publishing.
+
 ## Git identity
 
 - Use repository-local identity: Anonymous <anonymous@example.invalid>.

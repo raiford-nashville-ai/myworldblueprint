@@ -113,4 +113,8 @@ See `specs/refactor-verification.md` for the recorded results and remaining prod
 - `specs/`: requirements, frozen reference, architecture, and verification notes.
 - `mocks/`: preserved design history, not automatically synchronized.
 
-The initial baseline is on `main`; implementation is on `refactor/hugo-asset-layers`. No merge, remote, deployment, or live AI service is implied by this refactor.
+The refactor is merged into `main`. The initial static prototype is live at https://myworldblueprint.netlify.app/ through a verified manual deployment.
+
+Netlify build configuration is maintained in root `netlify.toml` on `main`. Automatic GitHub deployments still require the Netlify GitHub App to be authorized for this repository; deploy keys are disabled by repository policy. See `specs/netlify-deployment.md` for the exact status and remaining steps. Do not describe the Git-based pipeline as complete until a repository-triggered build succeeds.
+
+Generation remains a simulation, not a live AI service.
